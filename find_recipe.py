@@ -2,41 +2,43 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.neighbors import NearestNeighbors
 
-ERROR_THRESHOLD = 0.25
+def load_models_and_data():
+    """
+    Funkcja ładująca dane i modele.
+    """
+    # Wczytanie przepisów
+    df = pd.read_csv("subset_recipes.csv")
+    recipe_ids = df["Unnamed: 0"].tolist()
+    recipe_texts = df["NER"].tolist()
 
-# Wczytanie przepisów z pliku CSV
-df = pd.read_csv("subset_recipes.csv")  # Wczytaj plik CSV
-recipe_ids = df["Unnamed: 0"].tolist()  # Pobranie ID przepisów
-recipe_texts = df["NER"].tolist()  # Pobranie listy składników
+    # Model językowy
+    model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    recipe_vectors = model.encode(recipe_texts)
 
-# Model językowy
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')  # Sentence-BERT
+    # Model NearestNeighbors
+    nn_model = NearestNeighbors(n_neighbors=1, metric="cosine")
+    nn_model.fit(recipe_vectors)
 
-# Zamiana składników na wektory
-recipe_vectors = model.encode(recipe_texts)  # Zamiana składników na wektory liczbowe
+    return model, nn_model, recipe_ids, df
 
-# Tworzenie modelu NearestNeighbors
-nn_model = NearestNeighbors(n_neighbors=1, metric="cosine")  # Model wyszukiwania najbliższych sąsiadów
-nn_model.fit(recipe_vectors)  # Dopasowanie wektorów przepisów
-
-# Obsługa zapytania użytkownika
-def find_recipe(user_ingredients, error_threshold=ERROR_THRESHOLD):
+def find_recipe(user_ingredients, model, nn_model, recipe_ids, df, error_threshold=0.25):
     """
     Znajdź przepis na podstawie składników użytkownika.
     """
-
-    # Zamiana składników użytkownika na wektor
     user_vector = model.encode([user_ingredients])
-
-    # Wyszukiwanie najbardziej podobnego przepisu
     distances, indices = nn_model.kneighbors(user_vector)
-    print(distances)
     if distances[0][0] > error_threshold:
         return None
 
-    # Pobranie ID najlepiej dopasowanego przepisu
     closest_recipe_id = recipe_ids[indices[0][0]]
-    return df.iloc[closest_recipe_id]
+    recipe = df.iloc[closest_recipe_id]
 
-
-print(find_recipe("cheese, butter, garlic powder, salt", error_threshold=0.4))
+    return {
+        "id": int(recipe["Unnamed: 0"]),
+        "title": recipe["title"],
+        "ingredients": ", ".join(eval(recipe["ingredients"])),  # Zamiana tablicy na tekst
+        "directions": " ".join(eval(recipe["directions"])),     # Zamiana tablicy na tekst
+        "link": recipe.get("link", ""),
+        "source": recipe.get("source", "Unknown"),
+        "NER": ", ".join(eval(recipe["NER"]))                  # Zamiana tablicy na tekst
+    }
