@@ -49,7 +49,7 @@ const sendForm = async (formValues: Reactive<{
   returnStatusCode.value = null;
   const formattedIngredients = formValues['ingredients'].replaceAll("\n", ", ")
   const payload = {
-    ingredients: formattedIngredients,
+    ingredients: formattedIngredients.replaceAll("\n", ", "),
     "error-threshold": formValues['error-threshold'][0]
   }
 
