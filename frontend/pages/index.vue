@@ -11,20 +11,23 @@
       leave-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <MainForm @send-form="sendForm" v-if="displayState === DISPLAY_STATE.DISPLAY_FORM" />
+      <MainForm :with-error="returnStatusCode" @send-form="sendForm" v-if="displayState === DISPLAY_STATE.DISPLAY_FORM" />
       <div v-else-if="displayState === DISPLAY_STATE.DISPLAY_LOADER" class='flex space-x-2 justify-center items-center'>
         <div class='h-8 w-8 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]'></div>
         <div class='h-8 w-8 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]'></div>
         <div class='h-8 w-8 bg-primary rounded-full animate-bounce'></div>
       </div>
       <div v-else-if="displayState === DISPLAY_STATE.DISPLAY_RESULTS">
-        <RecipeResult @display-form="displayState = DISPLAY_STATE.DISPLAY_FORM" />
+        <RecipeResult :recipe="currentRecipe" @display-form="displayState = DISPLAY_STATE.DISPLAY_FORM" />
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
+
+import type {Recipe} from "~/types/recipe";
+
 enum DISPLAY_STATE {
   DISPLAY_FORM,
   DISPLAY_LOADER,
@@ -35,20 +38,32 @@ import MainForm from "~/components/MainForm.vue";
 import type {Reactive} from "vue";
 
 const displayState = ref<DISPLAY_STATE>(DISPLAY_STATE.DISPLAY_FORM);
+const returnStatusCode = ref<number | null>(null);
+const currentRecipe = ref<Recipe | null>(null);
 
-const sendForm = (formValues: Reactive<{
+const sendForm = async (formValues: Reactive<{
   ingredients: string,
   "error-threshold": [number]
 }>) => {
+  displayState.value = DISPLAY_STATE.DISPLAY_LOADER;
+  returnStatusCode.value = null;
   const formattedIngredients = formValues['ingredients'].replaceAll("\n", ", ")
   const payload = {
     ingredients: formattedIngredients,
     "error-threshold": formValues['error-threshold'][0]
   }
-  displayState.value = DISPLAY_STATE.DISPLAY_LOADER;
-  setTimeout(() => {
+
+  try {
+    const data = await $fetch("//localhost:5000/find-recipe", {
+      method: "POST",
+      body: payload
+    })
+    currentRecipe.value = data as Recipe;
     displayState.value = DISPLAY_STATE.DISPLAY_RESULTS;
-  }, 3000)
+  } catch (e){
+    returnStatusCode.value = e?.statusCode
+    displayState.value = DISPLAY_STATE.DISPLAY_FORM;
+  }
 }
 
 </script>

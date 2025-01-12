@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from find_recipe import load_models_and_data, find_recipe
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Ładowanie modeli przy starcie serwera
 print("Loading models and data, please wait...")
