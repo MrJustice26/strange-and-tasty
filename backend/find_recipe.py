@@ -7,7 +7,7 @@ def load_models_and_data():
     Funkcja ładująca dane i modele.
     """
     # Wczytanie przepisów
-    df = pd.read_csv("subset_recipes.csv")
+    df = pd.read_csv("mixed_recipes.csv")
     recipe_ids = df["Unnamed: 0"].tolist()
     recipe_texts = df["NER"].tolist()
 

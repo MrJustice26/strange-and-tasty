@@ -41,7 +41,7 @@ const displayState = ref<DISPLAY_STATE>(DISPLAY_STATE.DISPLAY_FORM);
 const returnStatusCode = ref<number | null>(null);
 const currentRecipe = ref<Recipe | null>(null);
 
-const sendForm = async (formValues: Reactive<{
+const sendForm = (formValues: Reactive<{
   ingredients: string,
   "error-threshold": [number]
 }>) => {
@@ -53,17 +53,16 @@ const sendForm = async (formValues: Reactive<{
     "error-threshold": formValues['error-threshold'][0]
   }
 
-  try {
-    const data = await $fetch("//localhost:5000/find-recipe", {
+    $fetch("//localhost:5000/find-recipe", {
       method: "POST",
       body: payload
+    }).then((response) => {
+      currentRecipe.value = response as Recipe;
+      displayState.value = DISPLAY_STATE.DISPLAY_RESULTS;
+    }).catch(error => {
+      returnStatusCode.value = error?.statusCode
+      displayState.value = DISPLAY_STATE.DISPLAY_FORM;
     })
-    currentRecipe.value = data as Recipe;
-    displayState.value = DISPLAY_STATE.DISPLAY_RESULTS;
-  } catch (e){
-    returnStatusCode.value = e?.statusCode
-    displayState.value = DISPLAY_STATE.DISPLAY_FORM;
-  }
 }
 
 </script>

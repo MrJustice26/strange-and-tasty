@@ -42,6 +42,6 @@ const computedReadableErrorThreshold = computed(() => {
 const computedErrorText = computed(() => {
   if(!props.withError) return ""
   if(props.withError === ErrorCodes.NOT_FOUND) return "Recipe not found.</br>Please write more <b>ingredients</b> or increase the <b>error-threshold</b>."
-  if(props.withError === ErrorCodes.BAD_REQUEST) return "Ingredients can't be empty."
+  if(props.withError === ErrorCodes.BAD_REQUEST) return "<b>Ingredients</b> can't be empty."
 })
 </script>
