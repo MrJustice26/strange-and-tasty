@@ -38,7 +38,7 @@ def find_recipe(user_ingredients, model, nn_model, recipe_ids, df, error_thresho
         "title": recipe["title"],
         "ingredients": ", ".join(eval(recipe["ingredients"])),  # Zamiana tablicy na tekst
         "directions": " ".join(eval(recipe["directions"])),     # Zamiana tablicy na tekst
-        "link": recipe.get("link", ""),
+        "link": recipe["link"] if pd.notna(recipe["link"]) else "",
         "source": recipe.get("source", "Unknown"),
         "NER": ", ".join(eval(recipe["NER"]))                  # Zamiana tablicy na tekst
     }
