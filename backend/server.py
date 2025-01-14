@@ -28,7 +28,7 @@ def get_recipe():
             return jsonify({"error": "Invalid or missing JSON payload"}), 400
 
         user_ingredients = data.get("ingredients")
-        error_threshold = data.get("error-threshold", 0.25)
+        error_threshold = data.get("error-threshold", 0.30)
 
         if not user_ingredients:
             return jsonify({"error": "Missing 'ingredients' parameter"}), 400

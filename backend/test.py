@@ -10,7 +10,7 @@ while True:
     if ingredients == '':
         break
     threshold = input("threshold: ")
-    safe_threshold = int(threshold) if threshold else 0.25
+    safe_threshold = float(threshold) if threshold else 0.30
     print(f'DEBUG: ingredients: {ingredients}, threshold: {str(safe_threshold)}')
     response = find_recipe(ingredients, model, nn_model, recipe_ids, df, error_threshold=safe_threshold)
     print(response)
@@ -19,7 +19,7 @@ while True:
     else:
         response = "None"
     is_satisfied = input("satisfied?: ")
-    ingredients_to_save = f'{str(safe_threshold)},{ingredients}'
+    ingredients_to_save = f'{str(safe_threshold)},"{ingredients}"'
     arguments.append(ingredients_to_save)
     print(f"DEBUG: Arguments: {ingredients_to_save} saved")
     if not is_satisfied:
@@ -31,5 +31,5 @@ while True:
 str_responses = "\n".join(responses)
 str_arguments = "\n".join(arguments)
 with open("./test/in.csv", "w", encoding="utf-8") as inf, open("./test/out.csv", "w", encoding="utf-8") as outf:
-    inf.write(str_responses)
-    outf.write(str_arguments)
+    outf.write(str_responses)
+    inf.write(str_arguments)

@@ -33,6 +33,8 @@ def find_recipe(user_ingredients, model, nn_model, recipe_ids, df, error_thresho
     closest_recipe_id = recipe_ids[indices[0][0]]
     recipe = df.iloc[closest_recipe_id]
 
+    print(f'Found with distance: {distances[0][0]}')
+
     return {
         "id": int(recipe["Unnamed: 0"]),
         "title": recipe["title"],
