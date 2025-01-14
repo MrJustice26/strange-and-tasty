@@ -3,7 +3,7 @@
     <div class="mb-4">
       <h3 class="text-3xl font-medium mb-2">{{recipe.title}}</h3>
       <Button v-if="recipe?.link" variant="link" class="pl-0" as-child>
-        <a :href="`https://${recipe.link}`">
+        <a :href="`https://${recipe.link}`" target="_blank">
           Recipe link
         </a>
       </Button>
