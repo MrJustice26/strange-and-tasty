@@ -1,10 +1,10 @@
-from backend.find_recipe import load_models_and_data,find_recipe
+from find_recipe import load_models_and_data,find_recipe
 
 arguments = []
 responses = []
 print("Loading models and data...")
 model, nn_model, recipe_ids, df = load_models_and_data()
-print("Loaded")
+print("Models and data loaded successfully!")
 while True:
     ingredients = input("ingredients: ")
     if ingredients == '':
