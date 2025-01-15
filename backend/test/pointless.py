@@ -122,6 +122,10 @@ None,Overfed Steak,"[""1 enemy ADC with 20 kills"", ""3 cups of misplays"", ""1 
 None,FF@15 Smoothie,"[""1 blender of tilted vibes"", ""2 scoops of 'ff@15' pings"", ""1 early game throw"", ""a dash of AFK energy"", ""garnish with muted players""]"
 """
 
-# Usuwanie cudzysłowów i nawiasów z ciągu danych
-cleaned_data = re.sub(r'[\"\[\]]', '', data)
+import re
+
+# Usuwanie wszystkiego do drugiego przecinka i czyszczenie danych
+cleaned_data = re.sub(r'^[^,]*,[^,]*,', '', data, flags=re.M)  # Usuwanie numeru i tytułu przepisu
+cleaned_data = re.sub(r'[\"\[\]]', '', cleaned_data)  # Usuwanie cudzysłowów i nawiasów
+
 print(cleaned_data)
