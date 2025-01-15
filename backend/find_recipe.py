@@ -27,13 +27,15 @@ def find_recipe(user_ingredients, model, nn_model, recipe_ids, df, error_thresho
     """
     user_vector = model.encode([user_ingredients])
     distances, indices = nn_model.kneighbors(user_vector)
+
+    print(f'Found with distance: {distances[0][0]}')
+
     if distances[0][0] > error_threshold:
         return None
 
     closest_recipe_id = recipe_ids[indices[0][0]]
     recipe = df.iloc[closest_recipe_id]
 
-    print(f'Found with distance: {distances[0][0]}')
 
     return {
         "id": int(recipe["Unnamed: 0"]),

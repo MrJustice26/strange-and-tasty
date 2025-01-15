@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center mt-20">
-    <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text py-2">✨Strange & Tasty✨</h1>
+    <h1 class="text-3xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text py-2">✨Strange & Tasty✨</h1>
   </div>
   <div class="container max-w-xl flex justify-center flex-col h-[calc(100vh-144px)]">
     <Transition

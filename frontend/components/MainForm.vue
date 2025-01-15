@@ -30,7 +30,7 @@ const props = defineProps<{
 
 const formValues = reactive({
   ingredients: "",
-  "error-threshold": [0.25]
+  "error-threshold": [0.30]
 })
 
 const computedReadableErrorThreshold = computed(() => {
